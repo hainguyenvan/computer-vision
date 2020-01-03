@@ -22,7 +22,7 @@ class Circle:
 def check_circle(possible):
     try:
 
-        if(possible.bounding_react_area > 4 and possible.bounding_react_height > 100 and possible.bounding_react_height < 150 or possible.bounding_react_area < 40):
+        if(possible.bounding_react_area > 100):
             # if(possible.bounding_react_area > 20 and possible.bounding_react_area < 100000 and possible.bounding_react_height > 100 and possible.bounding_react_height < 150):
             return True
         return False
