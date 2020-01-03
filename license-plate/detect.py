@@ -14,13 +14,13 @@ temp_folder = '/home/user1/Project/casper/images-processing/license-plate/'
 input = "test.jpg"
 img = cv2.imread(input)
 # cv2.imshow('original', img)
-# cv2.imwrite(temp_folder + '1 - original.png', img)
+cv2.imwrite(temp_folder + '1 - original.png', img)
 
 # hsv transform - value = gray image
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 hue, saturation, value = cv2.split(hsv)
 # cv2.imshow('gray', value)
-# cv2.imwrite(temp_folder + '2 - gray.png', value)
+cv2.imwrite(temp_folder + '2 - gray.png', value)
 
 # kernel to use for morphological operations
 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
@@ -30,25 +30,25 @@ topHat = cv2.morphologyEx(value, cv2.MORPH_TOPHAT, kernel)
 blackHat = cv2.morphologyEx(value, cv2.MORPH_BLACKHAT, kernel)
 # cv2.imshow('topHat', topHat)
 # cv2.imshow('blackHat', blackHat)
-# cv2.imwrite(temp_folder + '3 - topHat.png', topHat)
-# cv2.imwrite(temp_folder + '4 - blackHat.png', blackHat)
+cv2.imwrite(temp_folder + '3 - topHat.png', topHat)
+cv2.imwrite(temp_folder + '4 - blackHat.png', blackHat)
 
 # add and subtract between morphological operations
 add = cv2.add(value, topHat)
 subtract = cv2.subtract(add, blackHat)
 # cv2.imshow('subtract', subtract)
-# cv2.imwrite(temp_folder + '5 - subtract.png', subtract)
+cv2.imwrite(temp_folder + '5 - subtract.png', subtract)
 
 # applying gaussian blur on subtract image
 blur = cv2.GaussianBlur(subtract, (5, 5), 0)
 # cv2.imshow('blur', blur)
-# cv2.imwrite(temp_folder + '6 - blur.png', blur)
+cv2.imwrite(temp_folder + '6 - blur.png', blur)
 
 # thresholding
 thresh = cv2.adaptiveThreshold(
     blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 19, 9)
 # cv2.imshow('thresh', thresh)
-# cv2.imwrite(temp_folder + '7 - thresh.png', thresh)
+cv2.imwrite(temp_folder + '7 - thresh.png', thresh)
 
 # cv2.findCountours() function changed from OpenCV3 to OpenCV4: now it have only two parameters instead of 3
 cv2MajorVersion = cv2.__version__.split(".")[0]
@@ -85,7 +85,7 @@ for i in range(0, len(contours)):
         possibleChars.append(possibleChar)
 
 # cv2.imshow("contours", imageContours)
-# cv2.imwrite(temp_folder + '8 - imageContours.png', imageContours)
+cv2.imwrite(temp_folder + '8 - imageContours.png', imageContours)
 
 imageContours = np.zeros((height, width, 3), np.uint8)
 
@@ -98,7 +98,7 @@ for char in possibleChars:
 # using values from ctrs to draw new contours
 cv2.drawContours(imageContours, ctrs, -1, (255, 255, 255))
 # cv2.imshow("contoursPossibleChars", imageContours)
-# cv2.imwrite(temp_folder + '9 - contoursPossibleChars.png', imageContours)
+cv2.imwrite(temp_folder + '9 - contoursPossibleChars.png', imageContours)
 
 plates_list = []
 listOfListsOfMatchingChars = []
@@ -182,7 +182,7 @@ for listOfMatchingChars in listOfListsOfMatchingChars:
     cv2.drawContours(imageContours, contours, -1, contoursColor)
 
 # cv2.imshow("finalContours", imageContours)
-# cv2.imwrite(temp_folder + '10 - finalContours.png', imageContours)
+cv2.imwrite(temp_folder + '10 - finalContours.png', imageContours)
 
 for listOfMatchingChars in listOfListsOfMatchingChars:
     possiblePlate = functions.PossiblePlate()
@@ -271,12 +271,12 @@ for listOfMatchingChars in listOfListsOfMatchingChars:
             p2fRectPoints[0]), rectColour, 2)
 
         # cv2.imshow("detected", imageContours)
-        # cv2.imwrite(temp_folder + '11 - detected.png', imageContours)
+        cv2.imwrite(temp_folder + '11 - detected.png', imageContours)
 
-        cv2.imshow("detectedOriginal", img)
-        # cv2.imwrite(temp_folder + '12 - detectedOriginal.png', img)
+        # cv2.imshow("detectedOriginal", img)
+        cv2.imwrite(temp_folder + '12 - detectedOriginal.png', img)
 
         # cv2.imshow("plate", plates_list[i].Plate)
-        # cv2.imwrite(temp_folder + '13 - plate.png', plates_list[i].Plate)
+        cv2.imwrite(temp_folder + '13 - plate.png', plates_list[i].Plate)
 
-cv2.waitKey(0)
+# cv2.waitKey(0)
