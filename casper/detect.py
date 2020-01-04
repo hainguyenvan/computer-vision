@@ -5,7 +5,7 @@ import math
 import functions
 
 print("=== Detects Error Of Casper ===")
-img_input = "IMG_5293.JPG"
+img_input = "good.JPG"
 img = cv2.imread(img_input)
 
 print("Step 1: Convert images to HSV")
@@ -35,7 +35,9 @@ thresh = cv2.adaptiveThreshold(
 cv2.imwrite("5.thresh.png", thresh)
 
 print("Step 6: Find contours")
-contours, hierarchy = cv2.findContours(
+# contours, hierarchy = cv2.findContours(
+#     thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+_, contours, hierarchy = cv2.findContours(
     thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 # get hight and width of images
 print("-> Get hight/width of images")
