@@ -52,9 +52,10 @@ for i in range(0, len(contours)):
     cv2.drawContours(img_contours, contours, i, (255, 255, 255))
 
     possible = functions.Circle(contours[i])
-    is_circle = functions.check_circle(possible)
-    if is_circle is True:
-        print("is_circel: " + str(is_circle))
+
+    is_error1 = functions.check_error1(possible)
+    if is_error1 is True:
+        print("is_circel: " + str(is_error1))
         print("area: " + str(possible.bounding_react_area))
         possible_circles.append(possible)
 
