@@ -5,7 +5,7 @@ import math
 import functions
 
 print("=== Detects Error Of Casper ===")
-img_input = "good.JPG"
+img_input = "image_001.jpg"
 img = cv2.imread(img_input)
 
 print("Step 1: Convert images to HSV")
