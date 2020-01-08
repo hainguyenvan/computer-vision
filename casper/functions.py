@@ -22,15 +22,15 @@ class Circle:
         self.approx = cv2.approxPolyDP(cntr, 0.04 * self.peri, True)
 
 
-# def detect_object(possible):
-#     try:
-#         area = possible.bounding_react_area
-#         if area > 150000 and area < 400000:
-#             return True
-#         return False
-#     except Exception as err:
-#         print(err)
-#         return False
+def detect_object(possible):
+    try:
+        area = possible.bounding_react_area
+        if area > 150000 and area < 400000:
+            return True
+        return False
+    except Exception as err:
+        print(err)
+        return False
 
 
 def check_error1(possible):
@@ -44,7 +44,7 @@ def check_error1(possible):
 
         # if area > 100 and edeg_shape > 5 and width < 150 and height < 350:
         #     return True
-        if area > 100 and edeg_shape > 5 and width < 150 and height < 350:
+        if area > 100 and edeg_shape > 5 and width > 100 and width < 150 and height < 350:
             return True
         # if(possible.bounding_react_area > 40):
         #     # if(possible.bounding_react_area > 20 and possible.bounding_react_area < 100000 and possible.bounding_react_height > 100 and possible.bounding_react_height < 150):
