@@ -33,7 +33,7 @@ def detect_object(possible):
         return False
 
 
-def check_error1(possible):
+def check_circle(possible):
     try:
         area = possible.bounding_react_area
         edeg_shape = len(possible.approx)

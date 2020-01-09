@@ -75,8 +75,8 @@ def detect_error():
         cv2.drawContours(img_contours, contours, i, (255, 255, 255))
 
         possible = functions.Circle(contours[i])
-        is_error1 = functions.check_error1(possible)
-        if is_error1 is True:
+        is_circle = functions.check_circle(possible)
+        if is_circle is True:
             print("is_circel: " + str(is_error1))
             print("area: " + str(possible.bounding_react_area))
             possible_circles.append(possible)
