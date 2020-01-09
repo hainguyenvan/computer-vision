@@ -25,7 +25,7 @@ class Circle:
 def detect_object(possible):
     try:
         area = possible.bounding_react_area
-        if area > 150000 and area < 400000:
+        if area > 50000 and area < 60000:
             return True
         return False
     except Exception as err:

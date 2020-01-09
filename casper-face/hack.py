@@ -1,7 +1,8 @@
 import numpy as np
 import cv2
 
-cap = cv2.VideoCapture("/home/user1/Project/casper/face/video2.mp4")
+output = "/home/user1/Project/casper/face/image1"
+cap = cv2.VideoCapture("/home/user1/Project/casper/face/video1.mp4")
 fgbg = cv2.createBackgroundSubtractorMOG2()
 
 i = 0
@@ -11,7 +12,7 @@ while(1):
     fgmask = fgbg.apply(frame)
     cv2.imshow('fgmask', frame)
     cv2.imshow('frame', fgmask)
-    cv2.imwrite('background-substraction/'+str(i)+".png", fgmask)
+    cv2.imwrite(output+'/'+str(i)+".png", fgmask)
     i = i+1
 
     k = cv2.waitKey(30) & 0xff
