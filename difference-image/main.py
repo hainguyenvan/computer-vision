@@ -26,8 +26,9 @@ cv2.imshow("gray error", gray_error)
 cv2.imshow("gray good", gray_good)
 cv2.imshow("diff", diff)
 cv2.imshow("thresh", thresh)
-cv2.waitKey(0)
 
-# cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-#                         cv2.CHAIN_APPROX_SIMPLE)
+cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+                        cv2.CHAIN_APPROX_SIMPLE)
+print("Len cnts: ", str(len(cnts)))
+cv2.waitKey(0)
 # cnts = imutils.grab_contours(cnts)
