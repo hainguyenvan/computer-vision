@@ -8,8 +8,11 @@ u_h = 179
 u_s = 255
 u_v = 103
 
-cap = cv2.VideoCapture("/home/user1/Project/casper/face/video2.mp4")
+output_frame = "/home/user1/Project/casper/face/image1"
+cap = cv2.VideoCapture("/home/user1/Project/casper/face/video1.mp4")
 
+
+index = 0
 while True:
     ret, frame = cap.read()
     frame2 = cv2.flip(frame, 1)
@@ -22,8 +25,11 @@ while True:
     result = cv2.bitwise_and(frame, frame, mask=mask)
     # end hsv
 
+    output_img = output_frame + "/" + str(index)+".png"
+    cv2.imwrite(output_img, result)
     cv2.imshow("frame", frame)
     cv2.imshow("frame result mask", result)
+    index += 1
 
     key = cv2.waitKey(1)
     if key == 27:

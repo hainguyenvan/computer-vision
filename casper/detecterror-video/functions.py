@@ -36,7 +36,7 @@ def detect_object(possible):
     try:
         area = possible.bounding_react_area
         # print('Area: ', str(area))
-        if area > 60000 and area < 70000:
+        if area > 50000 and area < 70000:
             return True
         return False
     except Exception as err:
