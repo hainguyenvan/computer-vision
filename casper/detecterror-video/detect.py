@@ -4,7 +4,8 @@ import functions
 
 print("=== Casper Object Detect Error ===")
 output_image = "/home/user1/Project/casper/101/image"
-cap = cv2.VideoCapture("/home/user1/Desktop/Videotest.mp4")
+# cap = cv2.VideoCapture("/home/user1/Downloads/Videotest.mp4")
+cap = cv2.VideoCapture("video.mp4")
 
 index = 0
 current_type = "nan"
