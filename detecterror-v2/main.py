@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from possible import Possible
 
-img_input = "images/error2_2.jpg"
+img_input = "images/error2_3.jpg"
 
 
 # args is images thresh
@@ -23,7 +23,7 @@ def rotation_rect(thresh):
 
     gray = cv2.GaussianBlur(rotated, (11, 11), 0)
     edge = cv2.Canny(gray, 100, 200)
-    _, contours, _ = cv2.findContours(edge.copy(), 1, 1)
+    contours, _ = cv2.findContours(edge.copy(), 1, 1)
     cv2.drawContours(gray, contours, -1, [0, 255, 0], 2)
     gray = cv2.bitwise_not(gray)
     thresh = cv2.threshold(
@@ -32,7 +32,7 @@ def rotation_rect(thresh):
 
 
 def find_contours(thresh):
-    _, contours, hierarchy = cv2.findContours(
+    contours, hierarchy = cv2.findContours(
         thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     height, width = thresh.shape
     img_contours = np.zeros((height, width, 3), dtype=np.uint8)
@@ -45,7 +45,7 @@ def find_contours(thresh):
         x = possible.bounding_react_x
         y = possible.bounding_react_y
         roi = img_contours[y:y+h, x:x+w]
-        cv2.imwrite("output/22" + str(i)+".png", roi)
+        cv2.imwrite("output/" + str(i)+".png", roi)
     print("Len contours:", str(len(contours)))
     return img_contours
 
@@ -56,7 +56,7 @@ def main():
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (11, 11), 0)
     edge = cv2.Canny(gray, 100, 200)
-    _, contours, _ = cv2.findContours(edge.copy(), 1, 1)
+    contours, _ = cv2.findContours(edge.copy(), 1, 1)
     cv2.drawContours(gray, contours, -1, [0, 255, 0], 2)
     gray = cv2.bitwise_not(gray)
     thresh = cv2.threshold(
