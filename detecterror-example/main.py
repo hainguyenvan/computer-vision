@@ -27,7 +27,9 @@ class RequestHandler(BaseHTTPRequestHandler):
             print("[Info] sent background")
             content_len = int(self.headers.get("Content-Length"))
             body = self.rfile.read(content_len)
-            print("Body: ", str(body))
+            body = body.decode("utf8")
+            body = json.loads(body)
+            print("Body: ", body["type"])
             self.send_response(200)
             mimetype = "application/json"
             self.send_header('Content-type', mimetype)
