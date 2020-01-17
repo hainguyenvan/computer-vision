@@ -25,6 +25,9 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/background":
             print("[Info] sent background")
+            content_len = int(self.headers.get("Content-Length"))
+            body = self.rfile.read(content_len)
+            print("Body: ", str(body))
             self.send_response(200)
             mimetype = "application/json"
             self.send_header('Content-type', mimetype)
