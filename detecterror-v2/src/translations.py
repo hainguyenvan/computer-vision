@@ -4,11 +4,52 @@ import numpy as np
 from possible import Possible
 
 
+def convert_image_to_thresh(img):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    hue, saturation, value = cv2.split(hsv)
+    blur = cv2.GaussianBlur(value, (3, 3), 0)
+    thresh = cv2.adaptiveThreshold(
+        blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 3, 2)
+    return thresh
+
+
 def resize_image(img_pattern, img):
-    height, width, channels = img_pattern.shape
+    height = img_pattern.shape[0]
+    width = img_pattern.shape[1]
+    # height, width = img_pattern.shape
     dim = (width, height)
     resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
     return resized
+
+
+def crop_image_by_max_area(thresh):
+    contours, hierarchy = cv2.findContours(
+        thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    max_cntr = None
+    max_area_rect = -1
+    for cntr in contours:
+        rect = cv2.minAreaRect(cntr)
+        w = rect[1][0]
+        h = rect[1][1]
+        area = w*h
+        if max_area_rect < area:
+            max_cntr = cntr
+            max_area_rect = area
+
+    # coords = np.column_stack(np.where(thresh > 0))
+    # rect = cv2.minAreaRect(coords)
+    rect = cv2.minAreaRect(max_cntr)
+    box = cv2.boxPoints(rect)
+    ext_left = tuple(max_cntr[max_cntr[:, :, 0].argmin()][0])
+    ext_right = tuple(max_cntr[max_cntr[:, :, 0].argmax()][0])
+    ext_top = tuple(max_cntr[max_cntr[:, :, 1].argmin()][0])
+    ext_bot = tuple(max_cntr[max_cntr[:, :, 1].argmax()][0])
+
+    roi_corners = np.array([box], dtype=np.int32)
+    cv2.polylines(thresh, roi_corners, 1, (255, 0, 0))
+    cropped_image = thresh[ext_top[1]:ext_bot[1], ext_left[0]:ext_right[0]]
+    cv2.imwrite("output/crop_img.png",  cropped_image)
+    return None
 
 
 def highlight_contours(gray):

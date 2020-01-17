@@ -19,10 +19,10 @@ def is_error2(img):
     # resize images
     img = resize_image(img_pattern, img)
 
-    hsv = cv2.cvtColor(img_pattern, cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     hue, saturation, value = cv2.split(hsv)
-    cv2.imwrite("output/hsv.png", value)
+    # cv2.imwrite("output/hsv.png", value)
 
     # find contours
     # gray_pattern = cv2.cvtColor(img_pattern, cv2.COLOR_BGR2GRAY)
@@ -41,7 +41,7 @@ def is_error2(img):
         roi = img_contours[y:y+h, x:x+w]
         possible.roi = roi
         # possibles.append(possible)
-        cv2.imwrite("output/" + str(i)+".png", roi)
+        cv2.imwrite("output/roi" + str(i)+".png", roi)
     # _, pattern_possibles, _ = find_contours(value)
     print(str(len(contours)))
     # thresh_pattern = highlight_contours(gray_pattern)

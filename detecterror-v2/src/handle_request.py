@@ -1,33 +1,64 @@
 import cv2
-import pickle
+from skimage.measure import compare_ssim
 import numpy as np
 
-from translations import highlight_contours, background_subtraction, rotation_react_90, find_contours
+from translations import (highlight_contours, background_subtraction,
+                          rotation_react_90, find_contours, resize_image, convert_image_to_thresh, crop_image_by_max_area)
 from detects import is_error1, is_error2
+from possible import Possible
 
 
 def handle_background(img):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    background = highlight_contours(gray)
-    # cv2.imwrite("input/background.png", background)
-    return background
+    thresh = convert_image_to_thresh(img)
+    cv2.imwrite("pattern/background.jpg", thresh)
+    return thresh
 
 
 def handle_example_image(img):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    thresh = highlight_contours(gray)
-    rotation_img = rotation_react_90(thresh)
-    # background_img = cv2.imread("input/background.png")
-    # diff = background_subtraction(background_img, gray)
-    rotation_img = highlight_contours(rotation_img)
-    contour_img, possibles, index_max_area = find_contours(rotation_img)
-    cv2.imwrite("pattern/example.png", possibles[index_max_area].roi)
+    # convert image to thresh
+    img = convert_image_to_thresh(img)
+    img_background = cv2.imread("pattern/background.jpg")
+    img_background = convert_image_to_thresh(img_background)
 
-    # dumpy objects
-    pickle_out = open("pattern/example.pickle", "wb")
-    pickle.dump(possibles, pickle_out)
-    pickle_out.close()
-    return possibles[index_max_area].roi
+    # remove backgournd
+    resized_img = resize_image(img_background, img)
+    diff = resized_img - img_background
+
+    contours, hierarchy = cv2.findContours(
+        diff, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    max_area = -1
+    index_max_area = -1
+    possibles = []
+    for i in range(0, len(contours)):
+        possible = Possible(contours[i])
+        possibles.append(possible)
+        if max_area < possible.bounding_react_area:
+            index_max_area = i
+            max_area = possible.bounding_react_area
+
+    # find contours possible
+    possible_contours = []
+    possible_max_area = possibles[index_max_area]
+    x_min = possible_max_area.bounding_react_x
+    y_min = possible_max_area.bounding_react_y
+    x_max = x_min + possible_max_area.bounding_react_with
+    y_max = y_min + possible_max_area.bounding_react_height
+    for possible in possibles:
+        x = possible.bounding_react_x
+        y = possible.bounding_react_y
+        if x >= x_min and x <= x_max and y >= y_min and y <= y_max:
+            possible_contours.append(possible.contour)
+
+    height = diff.shape[0]
+    width = diff.shape[1]
+    img_contours = np.zeros((height, width, 3), dtype=np.uint8)
+    cv2.drawContours(img_contours, possible_contours, -1, [0, 255, 0], 2)
+    cv2.imwrite("output/draw_contours.png", img_contours)
+
+    # img_contours = convert_image_to_thresh(img_contours)
+    # crop_image = crop_image_by_max_area(img_contours)
+
+    return diff
 
 
 def handle_detect(img):
