@@ -193,6 +193,6 @@ def handle_detect(img):
     # print(jpg_as_text)
     result = {
         "type": "error2",
-        "image": jpg_as_text
+        "image": str(jpg_as_text)
     }
     return result
