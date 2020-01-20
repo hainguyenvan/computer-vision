@@ -16,6 +16,11 @@ PORT_NUMBER = 8080
 
 
 class RequestHandler(BaseHTTPRequestHandler):
+    def _set_response(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
     def do_GET(self):
         if self.path == "/":
             self.send_response(200)
@@ -107,6 +112,9 @@ class RequestHandler(BaseHTTPRequestHandler):
             }
             self.wfile.write(bytes(json.dumps(result), "utf-8"))
             return
+
+        # self._set_response()
+        # self.wfile.write("POST request for ".encode('utf-8'))
 
 
 def main():

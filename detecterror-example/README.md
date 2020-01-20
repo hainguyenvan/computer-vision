@@ -9,7 +9,7 @@
 -   1. Sent image example
 
 ```
-URL: http://localhost:8080/image-examples
+URL: http://localhost:5000/casper/image-examples
 Method: POST
 BODY:
 {
@@ -20,7 +20,7 @@ BODY:
 -   2. Sent image detects
 
 ```
-URL: http://localhost:8080/detects
+URL: http://localhost:5000/casper/detects
 Method: POST
 BODY:
 {
