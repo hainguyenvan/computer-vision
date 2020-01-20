@@ -24,7 +24,8 @@ def rotation_rect(thresh):
     # highlight contours
     gray = cv2.GaussianBlur(rotated, (11, 11), 0)
     edge = cv2.Canny(gray, 100, 200)
-    _, contours, _ = cv2.findContours(edge.copy(), 1, 1)
+    # _, contours, _ = cv2.findContours(edge.copy(), 1, 1)
+    contours, _ = cv2.findContours(edge.copy(), 1, 1)
     cv2.drawContours(gray, contours, -1, [0, 255, 0], 2)
     gray = cv2.bitwise_not(gray)
     thresh = cv2.threshold(
@@ -36,7 +37,8 @@ def convert_image_to_thresh(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (11, 11), 0)
     edge = cv2.Canny(gray, 100, 200)
-    _, contours, _ = cv2.findContours(edge.copy(), 1, 1)
+    # _, contours, _ = cv2.findContours(edge.copy(), 1, 1)
+    contours, _ = cv2.findContours(edge.copy(), 1, 1)
     cv2.drawContours(gray, contours, -1, [0, 255, 0], 2)
     gray = cv2.bitwise_not(gray)
     thresh = cv2.threshold(
@@ -45,7 +47,9 @@ def convert_image_to_thresh(img):
 
 
 def find_contours(thresh):
-    _, contours, hierarchy = cv2.findContours(
+    # _, contours, hierarchy = cv2.findContours(
+    #     thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(
         thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     height, width = thresh.shape
     img_contours = np.zeros((height, width, 3), dtype=np.uint8)
@@ -106,13 +110,6 @@ def handle_detect(img):
     img_contours, possibles, max_area_possible = find_contours(rotationed)
     cv2.imwrite("output/contours_img_detect.png", img_contours)
 
-    # check loss circle
-    if len(possibles) != 8:
-        result = {
-            "type": "error1"
-        }
-        return result
-
     # load image examples
     example_possibles = None
     with open('pattern/example.dictionary', 'rb') as config_dictionary_file:
@@ -120,6 +117,21 @@ def handle_detect(img):
 
     # get max area possible and resize image by examples
     max_possible = example_possibles.max_area_possible
+    # convert image models to base64
+    ret_examples, buffer_examples = cv2.imencode('.jpg', img_contours)
+    jpg_as_text_examples = base64.b64encode(buffer_examples)
+
+    # check loss circle
+    if len(possibles) != 8:
+        ret, buffer = cv2.imencode('.jpg', img_contours)
+        jpg_as_text = base64.b64encode(buffer)
+        result = {
+            "type": "error1",
+            "image": str(jpg_as_text),
+            "example": str(jpg_as_text_examples)
+        }
+        return result
+
     width = max_possible.bounding_react_with
     height = max_possible.bounding_react_height
     all_possible = resize_image(width,  height, max_area_possible.roi)
@@ -168,8 +180,12 @@ def handle_detect(img):
         print("------------------------------------")
 
     if len(error_possibles) == 0:
+        ret, buffer = cv2.imencode('.jpg', img_contours)
+        jpg_as_text = base64.b64encode(buffer)
         result = {
-            "type": "good"
+            "type": "good",
+            "image": str(jpg_as_text),
+            "example": str(jpg_as_text_examples)
         }
         return result
 
@@ -193,6 +209,7 @@ def handle_detect(img):
     # print(jpg_as_text)
     result = {
         "type": "error2",
-        "image": str(jpg_as_text)
+        "image": str(jpg_as_text),
+        "example": str(jpg_as_text_examples)
     }
     return result
