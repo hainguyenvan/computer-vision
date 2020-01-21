@@ -36,8 +36,8 @@ def handle_request_image_background():
 @app.route("/casper/image-examples", methods=["POST"])
 def handle_request_image_examples():
     print("[Info] sent image examples")
-    data = request.get_json()
-    img_base64 = data.get("body").get("image")
+    json_body = json.loads(request.data)
+    img_base64 = json_body.get("image")
     im = Image.open(BytesIO(base64.b64decode(img_base64)))
     im.save("output/exmaple_input.png", 'PNG')
     # end body
@@ -58,8 +58,10 @@ def handle_request_image_examples():
 @app.route("/casper/detects", methods=["POST"])
 def handle_request_detects():
     print("[Info] sent image detects")
-    data = request.get_json()
-    img_base64 = data.get("body").get("image")
+    # data = request.get_json()
+    # img_base64 = data.get("body").get("image")
+    json_body = json.loads(request.data)
+    img_base64 = json_body.get("image")
     im = Image.open(BytesIO(base64.b64decode(img_base64)))
     im.save("output/detect_input.png", 'PNG')
     # end body
@@ -75,4 +77,4 @@ def handle_request_detects():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
