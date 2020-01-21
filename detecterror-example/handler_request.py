@@ -82,6 +82,24 @@ def resize_image(width, height, img):
     return resized
 
 
+def handle_get_image_examples():
+    example_possibles = None
+    with open('pattern/example.dictionary', 'rb') as config_dictionary_file:
+        example_possibles = pickle.load(config_dictionary_file)
+
+    # get max area possible and resize image by examples
+    max_possible = example_possibles.max_area_possible
+    # convert image models to base64
+    # cv2.imwrite("output/get_image_examples.png", max_possible.roi)
+    # img = cv2.imread("output/get_image_examples.png")
+    ret_examples, buffer_examples = cv2.imencode('.jpg',  max_possible.roi)
+    jpg_as_text_examples = base64.b64encode(buffer_examples)
+    result = {
+        "image": str(jpg_as_text_examples)
+    }
+    return result
+
+
 def handle_image_examples(img):
     thresh = convert_image_to_thresh(img)
     rotationed = rotation_rect(thresh)
@@ -118,7 +136,7 @@ def handle_detect(img):
     # get max area possible and resize image by examples
     max_possible = example_possibles.max_area_possible
     # convert image models to base64
-    ret_examples, buffer_examples = cv2.imencode('.jpg', img_contours)
+    ret_examples, buffer_examples = cv2.imencode('.jpg', max_possible.roi)
     jpg_as_text_examples = base64.b64encode(buffer_examples)
 
     # check loss circle

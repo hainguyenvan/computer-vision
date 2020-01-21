@@ -9,7 +9,8 @@ from flask_cors import CORS
 from flask import Flask
 from flask import request
 
-from handler_request import (handle_detect, handle_image_examples)
+from handler_request import (
+    handle_detect, handle_image_examples,  handle_get_image_examples)
 
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +30,21 @@ def handle_request_image_background():
     result = {
         "status": 200,
         "message": "Successfully"
+    }
+    return json.dumps(result)
+
+
+@app.route("/casper/image-examples", methods=["GET"])
+def handle_request_get_image_examples():
+    print("[Info] Get image examples")
+    handler_example = handle_get_image_examples()
+    # print(str(handler_example))
+    result = {
+        "status": 200,
+        "message": "Successfully",
+        "data": {
+            "image": str(handler_example)
+        }
     }
     return json.dumps(result)
 
