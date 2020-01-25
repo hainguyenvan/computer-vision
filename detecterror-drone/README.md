@@ -12,7 +12,7 @@
 
 -   Error1: Detects multiple missing circles
 -   Error2: Detects error size of multiple circles
--   Error3: Detects error crack face
+-   Error3: Detects error crack surface
 -   Error4: Detects error of contours
 
 ## Algorithms

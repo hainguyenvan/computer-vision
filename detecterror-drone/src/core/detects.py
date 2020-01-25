@@ -5,7 +5,7 @@ import os
 
 from .utils import (convert_image_to_thresh, rotation_rect,
                     find_contours, resize_image)
-from .detects_size_circle import (detect_size_circle)
+from .detects_error_size_circle import (detect_error_size_circle)
 from .jaccard_similarity import (JaccardBox, jaccard_similarity)
 from .samples import (get_samples)
 
@@ -16,6 +16,8 @@ def detect_error(img):
     thresh = convert_image_to_thresh(img)
     rotationed = rotation_rect(thresh)
 
+    # detects error missing circles
+    # detects error size circles
     # highlight contours
     rotationed = cv2.GaussianBlur(rotationed, (11, 11), 0)
     edge = cv2.Canny(rotationed, 100, 200)
@@ -87,7 +89,7 @@ def detect_error(img):
         jaccard_box_detects, key=lambda item: item.area)
 
     # check error size circle
-    error_possibles = detect_size_circle(
+    error_possibles = detect_error_size_circle(
         sorted_jaccard_detects, sorted_jaccrad_samples)
     # draw box error size circle
     for i in range(0, len(error_possibles)):
@@ -99,6 +101,7 @@ def detect_error(img):
                       (x_max, y_max), (0, 0, 255), 2)
     cv2.imwrite(ROOT_DIR+"/output/result_detect_error.png", img_contours)
     # end check error size circle
+    # end detects error circle
 
     print("Len error size circle: ", str(len(error_possibles)))
     return img_contours

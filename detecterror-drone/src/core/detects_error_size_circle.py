@@ -9,7 +9,7 @@ from .utils import (find_contours)
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def detect_size_circle(jaccard_box_detects, jaccard_box_samples):
+def detect_error_size_circle(jaccard_box_detects, jaccard_box_samples):
     error_possibles = []
     for i in range(0, len(jaccard_box_samples)):
         jaccard_index = -1
