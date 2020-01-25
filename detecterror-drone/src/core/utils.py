@@ -38,6 +38,7 @@ def convert_image_to_thresh(img):
         gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
     return thresh
 
+
 # find countours
 def find_contours(thresh):
     _, contours, hierarchy = cv2.findContours(
@@ -67,3 +68,10 @@ def find_contours(thresh):
             possibles.append(possible)
             cv2.imwrite("output/" + str(i)+".png", roi)
     return img_contours, possibles, item_max_area_possible
+
+
+# resize images
+def resize_image(width, height, img):
+    dim = (width, height)
+    resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+    return resized

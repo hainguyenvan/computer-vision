@@ -3,6 +3,7 @@ import cv2
 
 from core.utils import(rotation_rect)
 from core.samples import (save_samples)
+from core.detects import (detect_error)
 
 
 def test_rotation_rect():
@@ -26,9 +27,19 @@ def test_rotation_rect():
 def test_save_samples():
     print("[INFO] Test save samples")
     img = cv2.imread("input/good.jpg")
-    save_samples(img)
+    example_possibles = save_samples(img)
+    cv2.imwrite("core/output/samples.png",
+                example_possibles.max_area_possible.roi)
+    print("[INFO] Done")
+
+
+def test_detects_error1():
+    print("[INFO] Test detect error 1")
+    img = cv2.imread("input/error1.jpg")
+    detect_error(img)
     print("[INFO] Done")
 
 
 # test_rotation_rect()
-test_save_samples()
+# test_save_samples()
+test_detects_error1()

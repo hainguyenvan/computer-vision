@@ -29,8 +29,21 @@ def save_samples(img):
     cv2.imwrite(ROOT_DIR+"/output/thresh_img_example.png", thresh)
     cv2.imwrite(ROOT_DIR+"/output/rotationed_img_example.png", rotationed)
 
+    # crop sample image
+    # Find contour and sort by contour area
+    _, cnts, _ = cv2.findContours(
+        rotationed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
+    # Find bounding box and extract ROI
+    crop_sample_img = None
+    for c in cnts:
+        x, y, w, h = cv2.boundingRect(c)
+        crop_sample_img = rotationed[y: y+h, x:x+w]
+        break
+    cv2.imwrite(ROOT_DIR+"/output/sample_crop_img.png", crop_sample_img)
+
     # find contours
-    img_contours, possibles, max_area_possible = find_contours(rotationed)
+    img_contours, possibles, max_area_possible = find_contours(crop_sample_img)
     cv2.imwrite(ROOT_DIR+"output/contours_img_example.png", img_contours)
 
     example_possibles = PossibleList(possibles, max_area_possible)

@@ -12,7 +12,7 @@ class JaccardBox:
         self.y_max = y+height
         self.width = width
         self.height = height
-        self.area = (width + 1) * (height+1)
+        self.area = width * height
 
 
 # box_a: JaccardBox
@@ -26,7 +26,7 @@ def jaccard_similarity(box_a,  box_b):
     y_max = max(box_a.y_max, box_b.y_max)
 
     # compute the area of intersection rectangle
-    inter_area = max(0, x_max - x_min+1)*max(0, y_max - y_min + 1)
+    inter_area = max(0, x_max - x_min)*max(0, y_max - y_min)
 
     # compute the Jaccard index value by taking the intersection
     # area and dividing it by the sum of prediction + ground-truth
