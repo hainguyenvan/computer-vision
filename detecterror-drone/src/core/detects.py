@@ -86,6 +86,19 @@ def detect_error(img):
     sorted_jaccard_detects = sorted(
         jaccard_box_detects, key=lambda item: item.area)
 
+    # check error1
     error1_possibles = detect_error1(
         sorted_jaccard_detects, sorted_jaccrad_samples)
+    # draw error1
+    for i in range(0, len(error1_possibles)):
+        x_min = error1_possibles[i].x_min
+        y_min = error1_possibles[i].y_min
+        x_max = error1_possibles[i].x_max
+        y_max = error1_possibles[i].y_max
+        cv2.rectangle(img_contours, (x_min, y_min),
+                      (x_max, y_max), (0, 0, 255), 2)
+    cv2.imwrite(ROOT_DIR+"/output/result_detect_error.png", img_contours)
+    # end check erorr1
+
+    print("==============")
     print("Len error: ", str(len(error1_possibles)))
