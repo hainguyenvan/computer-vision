@@ -1,7 +1,19 @@
+## Detects
+
+-   Detects multiple missing circles
+-   Detects error size of multiple circles
+
+## Technicals
+
+-   OpenCV of python
+-   Algorithms jaccard detects missing circles, error size of mutiple circles
+
 ## Error
-* Error1: Detects multiple missing circles
-* Error2: Detects error size of multiple circles
-* Error3: Detects error of contours
+
+-   Error1: Detects multiple missing circles
+-   Error2: Detects error size of multiple circles
+-   Error3: Detects error crack face
+-   Error4: Detects error of contours
 
 ## Algorithms
 
@@ -35,7 +47,5 @@ BODY:
 
 ## Issues
 
--   Chưa phát khoanh vùng được vị trí mà bị thiếu lỗ
--   Hiện mới chỉ phát hiện các lỗ có area khác nhau hơn 1000
 -   Hiện chưa apply thuật toán trừ background
 -   Các vật thể phải đặt ở một góc lệch nhất định để xoay nó về cùng một chiều, chưa hỗ trợ việc nhận diện vật thể xoay ở các góc khác nhau
