@@ -5,7 +5,7 @@ import os
 
 from .utils import (convert_image_to_thresh, rotation_rect,
                     find_contours, resize_image)
-from .detects_error1 import (detect_error1)
+from .detects_size_circle import (detect_size_circle)
 from .jaccard_similarity import (JaccardBox, jaccard_similarity)
 from .samples import (get_samples)
 
@@ -86,19 +86,19 @@ def detect_error(img):
     sorted_jaccard_detects = sorted(
         jaccard_box_detects, key=lambda item: item.area)
 
-    # check error1
-    error1_possibles = detect_error1(
+    # check error size circle
+    error_possibles = detect_size_circle(
         sorted_jaccard_detects, sorted_jaccrad_samples)
-    # draw error1
-    for i in range(0, len(error1_possibles)):
-        x_min = error1_possibles[i].x_min
-        y_min = error1_possibles[i].y_min
-        x_max = error1_possibles[i].x_max
-        y_max = error1_possibles[i].y_max
+    # draw box error size circle
+    for i in range(0, len(error_possibles)):
+        x_min = error_possibles[i].x_min
+        y_min = error_possibles[i].y_min
+        x_max = error_possibles[i].x_max
+        y_max = error_possibles[i].y_max
         cv2.rectangle(img_contours, (x_min, y_min),
                       (x_max, y_max), (0, 0, 255), 2)
     cv2.imwrite(ROOT_DIR+"/output/result_detect_error.png", img_contours)
-    # end check erorr1
+    # end check error size circle
 
-    print("==============")
-    print("Len error: ", str(len(error1_possibles)))
+    print("Len error size circle: ", str(len(error_possibles)))
+    return img_contours

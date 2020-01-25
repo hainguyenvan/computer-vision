@@ -33,7 +33,7 @@ def test_save_samples():
     print("[INFO] Done")
 
 
-def test_detects_error1():
+def test_detects_error():
     print("[INFO] Test detect error 1")
     img = cv2.imread("input/error1.jpg")
     detect_error(img)
@@ -42,4 +42,4 @@ def test_detects_error1():
 
 # test_rotation_rect()
 # test_save_samples()
-test_detects_error1()
+test_detects_error()
