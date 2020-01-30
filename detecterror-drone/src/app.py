@@ -1,3 +1,4 @@
+# import packages
 import json
 import base64
 import cv2
@@ -9,13 +10,15 @@ from flask_cors import CORS
 from flask import Flask
 from flask import request
 
-from handler_request import (
-    handle_detect, handle_image_examples,  handle_get_image_examples)
+# import handle functions
+from core.samples import (save_samples, get_samples)
 
+# create app
 app = Flask(__name__)
 CORS(app)
 
 
+# api hello world
 @app.route("/")
 def index():
     result = {
@@ -25,72 +28,74 @@ def index():
     return json.dumps(result)
 
 
+# api sent background
 @app.route("/casper/image-background", methods=["POST"])
 def handle_request_image_background():
+    # todo-hainv
     result = {
         "status": 200,
         "message": "Successfully"
     }
-    return json.dumps(result)
+    return result
 
 
+# api get image example
 @app.route("/casper/image-examples", methods=["GET"])
 def handle_request_get_image_examples():
-    print("[Info] Get image examples")
-    handler_example = handle_get_image_examples()
-    # print(str(handler_example))
+    print("[INFO] Get image examples")
+    # get examples
+    example_possibles = get_samples()
+    ret_examples, buffer_examples = cv2.imencode(
+        '.jpg',  example_possibles.max_area_possible.roi)
+    jpg_as_text_examples = base64.b64encode(buffer_examples)
     result = {
         "status": 200,
         "message": "Successfully",
         "data": {
-            "image": str(handler_example)
+            "image":  str(jpg_as_text_examples)
         }
     }
     return json.dumps(result)
 
 
+# api handle request example
+#  body { "image":"base64"}
 @app.route("/casper/image-examples", methods=["POST"])
 def handle_request_image_examples():
-    print("[Info] sent image examples")
-    json_body = json.loads(request.data)
-    img_base64 = json_body.get("image")
-    im = Image.open(BytesIO(base64.b64decode(img_base64)))
-    im.save("output/exmaple_input.png", 'PNG')
-    # end body
+    try:
+        print("[INFO] Handle sent image examples")
+        # parse body
+        json_body = json.loads(request.data)
+        img_base64 = json_body.get("image")
+        im = Image.open(BytesIO(base64.b64decode(img_base64)))
+        im.save("core/images/exmaple_input.png", "PNG")
 
-    img = cv2.imread("output/exmaple_input.png")
-    handler_example = handle_image_examples(img)
-    # print(str(handler_example))
-    result = {
-        "status": 200,
-        "message": "Successfully",
-        "data": {
-            "image": str(handler_example)
+        # handle example
+        img = cv2.imread("core/images/exmaple_input.png")
+        example_possibles = save_samples(img)
+        cv2.imwrite("core/images/exmaple_handled.png",
+                    example_possibles.max_area_possible.roi)
+        ret, buffer = cv2.imencode(
+            '.jpg', example_possibles.max_area_possible.roi)
+        jpg_as_text = base64.b64encode(buffer)
+
+        result = {
+            "status": 200,
+            "message": "Successfully",
+            "data": {
+                "image": str(jpg_as_text)
+            }
         }
-    }
-    return json.dumps(result)
+        return json.dumps(result)
+    except Exception as ex:
+        print("[ERROR] Handle request sent image examples: ", str(ex))
+        result = {
+            "status":  500,
+            "message": str(ex)
+        }
+        return json.dumps(result)
 
 
-@app.route("/casper/detects", methods=["POST"])
-def handle_request_detects():
-    print("[Info] sent image detects")
-    # data = request.get_json()
-    # img_base64 = data.get("body").get("image")
-    json_body = json.loads(request.data)
-    img_base64 = json_body.get("image")
-    im = Image.open(BytesIO(base64.b64decode(img_base64)))
-    im.save("output/detect_input.png", 'PNG')
-    # end body
-
-    img = cv2.imread("output/detect_input.png")
-    handle_detect_result = handle_detect(img)
-    result = {
-        "status": 200,
-        "message": "Successfully",
-        "data": handle_detect_result
-    }
-    return json.dumps(result)
-
-
+# run server
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
