@@ -19,6 +19,6 @@ def detect_error_size_circle(jaccard_box_detects, jaccard_box_samples):
             if index > 0 and index < 1.5:
                 jaccard_index = index
                 break
-        if jaccard_index < 0 or jaccard_index >= 1.5:
+        if jaccard_index <= 0 or jaccard_index >= 1.5:
             error_possibles.append(jaccard_box_samples[i])
     return error_possibles
