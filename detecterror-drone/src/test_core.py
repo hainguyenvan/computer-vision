@@ -35,7 +35,7 @@ def test_save_samples():
 
 def test_detects_error():
     print("[INFO] Test detect error 1")
-    img = cv2.imread("input/error1.jpg")
+    img, _, _ = cv2.imread("input/error1.jpg")
     detect_error(img)
     print("[INFO] Done")
 

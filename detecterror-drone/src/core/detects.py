@@ -12,6 +12,7 @@ from .samples import (get_samples)
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
+# return: (image error: image, sample image: image, error: boolean)
 def detect_error(img):
     thresh = convert_image_to_thresh(img)
     rotationed = rotation_rect(thresh)
@@ -104,4 +105,8 @@ def detect_error(img):
     # end detects error circle
 
     print("Len error size circle: ", str(len(error_possibles)))
-    return img_contours
+    is_error = True
+    if len(error_possibles) == 0:
+        is_error = False
+
+    return img_contours, max_possible.roi, is_error

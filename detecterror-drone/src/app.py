@@ -12,6 +12,7 @@ from flask import request
 
 # import handle functions
 from core.samples import (save_samples, get_samples)
+from core.detects import (detect_error)
 
 # create app
 app = Flask(__name__)
@@ -59,7 +60,7 @@ def handle_request_get_image_examples():
 
 
 # api handle request example
-#  body { "image":"base64"}
+# body { "image":"base64"}
 @app.route("/casper/image-examples", methods=["POST"])
 def handle_request_image_examples():
     try:
@@ -91,6 +92,46 @@ def handle_request_image_examples():
         print("[ERROR] Handle request sent image examples: ", str(ex))
         result = {
             "status":  500,
+            "message": str(ex)
+        }
+        return json.dumps(result)
+
+
+# api handle detect error
+@app.route("/casper/detects", methods=["POST"])
+def handle_request_detects():
+    try:
+        print("[INFO] Handle request detects")
+        # parse body
+        json_body = json.loads(request.data)
+        img_base64 = json_body.get("image")
+        im = Image.open(BytesIO(base64.b64decode(img_base64)))
+        im.save("core/images/detect_input.png", 'PNG')
+
+        # detects error
+        img = cv2.imread("core/images/detect_input.png")
+        detects_img, sample_img, is_error = detect_error(img)
+
+        ret, buffer_detects = cv2.imencode('.jpg', detects_img)
+        jpg_as_text_detects = base64.b64encode(buffer_detects)
+
+        ret, buffer_samples = cv2.imencode('.jpg', sample_img)
+        jpg_as_text_samples = base64.b64encode(buffer_samples)
+
+        result = {
+            "status": 200,
+            "message": "Successfully",
+            "data": {
+                "isError": str(is_error),
+                "image": str(jpg_as_text_samples),
+                "example": str(jpg_as_text_detects)
+            }
+        }
+        return json.dumps(result)
+    except Exception as ex:
+        print("[ERROR] Handle request detects: ", str(ex))
+        result = {
+            "status": 500,
             "message": str(ex)
         }
         return json.dumps(result)
